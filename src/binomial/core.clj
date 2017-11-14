@@ -27,21 +27,20 @@
         (assoc new-tree :left new-tree-left :right new-tree-right))
       new-tree)))
 
-(defn calculate-leaf-payoff [X strike-price u d number-of-ups number-of-downs]
-  (let [future-X-price (* (Math/pow d number-of-downs) (* (Math/pow u number-of-ups) X))]    
-    #_(if (> strike-price future-X-price)
-        (- strike-price future-X-price)
+(defn calculate-leaf-payoff [is-call X strike-price u d number-of-ups number-of-downs]
+  (let [future-X-price (* (Math/pow d number-of-downs) (* (Math/pow u number-of-ups) X))]
+    (if is-call
+      (if (> future-X-price strike-price)
+        (- future-X-price future-X-price )
         0)
-    (if (> strike-price future-X-price)
+      (if (> strike-price future-X-price)
         (- strike-price future-X-price )
-        0)
-    
-    ))
+        0))))
 
 (defn leaf? [tree]
   (nil? (:left tree)))
 
-(defn calculate-leaves [tree X strike-price u d number-of-ups number-of-downs]
+(defn calculate-leaves [is-call tree X strike-price u d number-of-ups number-of-downs]
   (if (leaf? tree)
     (assoc tree :payoff (calculate-leaf-payoff X strike-price u d number-of-ups number-of-downs))
     (do
@@ -67,11 +66,11 @@
             tree))))))
 
 (defn calculate-c 
-  ([X strike-price r t u d n]
+  ([is-call X strike-price r t u d n]
     (let [q (calculate-q r t u d)
           binomial-tree (build-tree (build-empty-tree) n)]
       (calculate-c binomial-tree X strike-price r t q u d)))
   ([binomial-tree X strike-price r t q u d]
-    (let [binomial-tree-with-leaves-populated (calculate-leaves binomial-tree X strike-price u d 0 0)]
+    (let [binomial-tree-with-leaves-populated (calculate-leaves is-call binomial-tree X strike-price u d 0 0)]
       (clojure.pprint/pprint (calculate-root-c binomial-tree-with-leaves-populated r t q))      
       (:payoff (calculate-root-c binomial-tree-with-leaves-populated r t q)))))
