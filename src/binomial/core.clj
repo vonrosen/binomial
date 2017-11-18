@@ -11,10 +11,13 @@
 (defn discount-factor [r t]  
   (Math/pow Math/E (* -1 r t)))
 
-(def calculate-q 
-  (memoize 
-   (fn [r t u d]     
-     (/ (- (discount-factor r t) d) (- u d)))))
+(def calculate-q
+  (fn [X r t u d]
+    ;;(prn (- (* X u) (* X d)))
+     (/ (- (* X (Math/pow Math/E (* r t))) (* X d)) (- (* X u) (* X d))))
+  #_(memoize 
+    (fn [X r t u d]     
+      (/ (- (* X (Math/pow Math/E (* r t))) (* X d)) (- (* X u) (* X d))))))
 
 (defn build-empty-tree []
   {:left nil :right nil :payoff nil})
@@ -67,8 +70,9 @@
 
 (defn calculate-c 
   ([is-call X strike-price r t u d n]
-    (let [q (calculate-q r t u d)
+    (let [q (calculate-q X r t u d)          
           binomial-tree (build-tree (build-empty-tree) n)]
+      (prn (str "q= " q))
       (calculate-c is-call binomial-tree X strike-price r t q u d)))
   ([is-call binomial-tree X strike-price r t q u d]
     (let [binomial-tree-with-leaves-populated (calculate-leaves is-call binomial-tree X strike-price u d 0 0)]
