@@ -1,4 +1,6 @@
-(ns binomial.core)
+(ns binomial.core
+  (:gen-class)
+  (:require [clojure.pprint :as pp]))
 
 (def defaultX 100)
 (def default-strike-price 110)
@@ -64,13 +66,26 @@
               (calculate-root-c new-tree r t q))                                  
             tree))))))
 
-(defn calculate-c 
+(defn calculate-c  
   ([is-call X strike-price r t u d n]
+    (if is-call (prn "pricing call option") (prn "pricing put option"))
     (let [q (calculate-q X r t u d)          
           binomial-tree (build-tree (build-empty-tree) n)]
       (prn (str "q= " q))
       (calculate-c is-call binomial-tree X strike-price r t q u d)))
   ([is-call binomial-tree X strike-price r t q u d]
     (let [binomial-tree-with-leaves-populated (calculate-leaves is-call binomial-tree X strike-price u d 0 0)]
-      (clojure.pprint/pprint (calculate-root-c binomial-tree-with-leaves-populated r t q))      
-      (:payoff (calculate-root-c binomial-tree-with-leaves-populated r t q)))))
+      (pp/pprint (calculate-root-c binomial-tree-with-leaves-populated r t q))      
+      (prn (str "option value = " (:payoff (calculate-root-c binomial-tree-with-leaves-populated r t q)))))))
+
+(defn -main [& args]  
+  (if (not (empty? args))
+    (let [is-call (Boolean/valueOf (nth args 0))
+         X (Long/valueOf (nth args 1))
+         strike-price (Long/valueOf (nth args 2))
+         r (Double/valueOf (nth args 3))
+         t (Double/valueOf (nth args 4))
+         u (Double/valueOf (nth args 5))
+         d (Double/valueOf (nth args 6))
+         n (Integer/valueOf (nth args 7))]
+      (calculate-c is-call X strike-price r t u d n))))
