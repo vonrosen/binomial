@@ -12,15 +12,11 @@
   (Math/pow Math/E (* -1 r t)))
 
 (def calculate-q
-  (fn [X r t u d]
-    ;;(prn (- (* X u) (* X d)))
-     (/ (- (* X (Math/pow Math/E (* r t))) (* X d)) (- (* X u) (* X d))))
-  #_(memoize 
-    (fn [X r t u d]     
-      (/ (- (* X (Math/pow Math/E (* r t))) (* X d)) (- (* X u) (* X d))))))
+  (fn [X r t u d]        
+    (/ (- (discount-factor r t) d) (- u d))))
 
 (defn build-empty-tree []
-  {:left nil :right nil :payoff nil})
+  {:left nil :right nil :payoff nil :X nil})
 
 (defn build-tree [tree time-periods]
   (let [new-tree (assoc tree :left (build-empty-tree) :right (build-empty-tree))]
@@ -33,19 +29,19 @@
 (defn calculate-leaf-payoff [is-call X strike-price u d number-of-ups number-of-downs]
   (let [future-X-price (* (Math/pow d number-of-downs) (* (Math/pow u number-of-ups) X))]
     (if is-call
-      (if (> future-X-price strike-price)
-        (- future-X-price future-X-price )
-        0)
-      (if (> strike-price future-X-price)
-        (- strike-price future-X-price )
-        0))))
+      (max (- future-X-price strike-price) 0)
+      (max (- strike-price future-X-price) 0))))
 
 (defn leaf? [tree]
   (nil? (:left tree)))
 
+(defn calculate-future-X [X u d number-of-ups number-of-downs]
+  (* (Math/pow d number-of-downs) (* (Math/pow u number-of-ups) X)))
+
 (defn calculate-leaves [is-call tree X strike-price u d number-of-ups number-of-downs]
   (if (leaf? tree)
-    (assoc tree :payoff (calculate-leaf-payoff is-call X strike-price u d number-of-ups number-of-downs))
+    (assoc tree :payoff (calculate-leaf-payoff is-call X strike-price u d number-of-ups number-of-downs) 
+           :X (calculate-future-X X u d number-of-ups number-of-downs))
     (do
       (let [left (calculate-leaves is-call (:left tree) X strike-price u d (+ number-of-ups 1) number-of-downs)
             right (calculate-leaves is-call (:right tree) X strike-price u d number-of-ups (+ number-of-downs 1))]
