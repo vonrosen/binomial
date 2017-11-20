@@ -14,7 +14,7 @@
   (Math/pow Math/E (* -1 r t)))
 
 (def calculate-q
-  (fn [X r t u d]        
+  (fn [r t u d]        
     (/ (- (discount-factor r t) d) (- u d))))
 
 (defn build-empty-tree []
@@ -69,7 +69,7 @@
 (defn calculate-c  
   ([is-call X strike-price r t u d n]
     (if is-call (prn "pricing call option") (prn "pricing put option"))
-    (let [q (calculate-q X r t u d)          
+    (let [q (calculate-q r t u d)          
           binomial-tree (build-tree (build-empty-tree) n)]
       (prn (str "q= " q))
       (calculate-c is-call binomial-tree X strike-price r t q u d)))
