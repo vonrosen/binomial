@@ -20,17 +20,17 @@
         (assoc new-tree :left new-tree-left :right new-tree-right))
       new-tree)))
 
+(defn calculate-future-X [X u d number-of-ups number-of-downs]
+  (* (Math/pow d number-of-downs) (* (Math/pow u number-of-ups) X)))
+
 (defn calculate-leaf-payoff [is-call X strike-price u d number-of-ups number-of-downs]
-  (let [future-X-price (* (Math/pow d number-of-downs) (* (Math/pow u number-of-ups) X))]
+  (let [future-X-price (calculate-future-X X u d number-of-ups number-of-downs)]
     (if is-call
       (max (- future-X-price strike-price) 0)
       (max (- strike-price future-X-price) 0))))
 
 (defn leaf? [tree]
   (nil? (:left tree)))
-
-(defn calculate-future-X [X u d number-of-ups number-of-downs]
-  (* (Math/pow d number-of-downs) (* (Math/pow u number-of-ups) X)))
 
 (defn calculate-leaves [is-call tree X strike-price u d number-of-ups number-of-downs]
   (if (leaf? tree)
