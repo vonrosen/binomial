@@ -12,7 +12,7 @@ lein run <call_option_or_not> <underlying_price> <strike_price> <risk free rate 
 
 ## Example
   
-call option, 100 underlying price, 110 strike price, 10% risk free rate of return, discount over half the period of risk free rate of return, 20% up move percent of underlying per time period, 20% down move percent of underlying per time period
+call option, 100 underlying price, 110 strike price, 10% risk free rate of return, discount over half the period of risk free rate of return, 20% up move percent of underlying per time period, 20% down move percent of underlying per time period, 2 time periods of movement until expiry
 
 ```lein run true 100 110 .1 .5 1.2 .8 2```
 
