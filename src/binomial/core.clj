@@ -66,9 +66,10 @@
       (prn (str "q= " q))
       (calculate-c is-call binomial-tree X strike-price r t q u d)))
   ([is-call binomial-tree X strike-price r t q u d]
-    (let [binomial-tree-with-leaves-populated (calculate-leaves is-call binomial-tree X strike-price u d 0 0)]
-      (pp/pprint (calculate-root-c binomial-tree-with-leaves-populated r t q))      
-      (prn (str "option value = " (:payoff (calculate-root-c binomial-tree-with-leaves-populated r t q)))))))
+    (let [binomial-tree-with-leaves-populated (calculate-leaves is-call binomial-tree X strike-price u d 0 0)
+          final-tree (calculate-root-c binomial-tree-with-leaves-populated r t q)]
+      (pp/pprint final-tree)      
+      (prn (str "option value = " (:payoff final-tree))))))
 
 (defn -main [& args]  
   (if (not (empty? args))
