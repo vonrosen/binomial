@@ -2,14 +2,6 @@
   (:gen-class)
   (:require [clojure.pprint :as pp]))
 
-(def defaultX 100)
-(def default-strike-price 110)
-(def defaultu 1.4) ;;up factor
-(def defaultd 0.6) ;;down factor
-(def defaultr 0.05) ;; risk free rate of return
-(def default-total-time-periods 3) ;;levels in binomial tree, not including root
-(def total-time-periods default-total-time-periods)
-
 (defn discount-factor [r t]  
   (Math/pow Math/E (* -1 r t)))
 
