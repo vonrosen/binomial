@@ -4,11 +4,11 @@ Calculate option values uses the binomial pricing model.
 
 ## Usage
 
+```
 git clone git@github.com:vonrosen/binomial.git
-
 lein uberjar
-
 lein run <call_option_or_not> <underlying_price> <strike_price> <risk free rate of return> <time period for discounting> <up movement factor> <down movement factor> <number of levels in binomial tree not including root>
+```
 
 ## Example
   
