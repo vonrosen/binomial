@@ -3,7 +3,8 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  #_:plugins #_[[cider/cider-nrepl "0.9.1"]]
+  :plugins [[cider/cider-nrepl "0.9.1"]
+	      [lein2-eclipse "2.0.0"]]
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojure-contrib "1.1.0"]]
   #_:profiles #_{:dev {:dependencies [[com.cemerick/piggieback "0.2.0"]
