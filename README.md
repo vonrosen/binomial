@@ -1,6 +1,6 @@
 # binomial
 
-Calculate option values uses the binomial pricing model.
+Calculate option values using the binomial pricing model.
 
 ## Usage
 
